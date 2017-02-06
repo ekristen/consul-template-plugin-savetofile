@@ -18,16 +18,16 @@ func main() {
 }
 
 func realMain() error {
-	if len(os.Args) != 6 {
+	if len(os.Args) != 5 {
 		// Ensure the empty input case is handled correctly
 		return nil
 	}
 
-	// savetofile <filepath> <data> <uid> <gid>
+	// savetofile <filepath> <uid> <gid> <data>
 	path := os.Args[1]
-	data := os.Args[2]
-	uid_arg := os.Args[3]
-	gid_arg := os.Args[4]
+	uid_arg := os.Args[2]
+	gid_arg := os.Args[3]
+	data := os.Args[4]
 
 	uid, err := strconv.Atoi(uid_arg)
 	if err != nil {
