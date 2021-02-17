@@ -7,7 +7,7 @@ I also wanted to tweak it a bit to be just about saving the contents to a file a
 ## Usage
 
 ```bash
-savetofile <mode> <path> <uid> <gid> <contents>
+savetofile <mode> <path> <uid> <gid> <perm> <contents>
 ```
 
 Valid Values for Mode:
@@ -23,19 +23,19 @@ Valid Values for Mode:
   {{ if .Data.ca_chain }}
   {{ range $key, $value := .Data.ca_chain }}
     {{ if eq $key 0 }}
-      {{ $value | plugin "/usr/local/bin/savetofile" "create-nl" "/etc/consul/ssl/ca.crt" "100" "1000" }}
+      {{ $value | plugin "/usr/local/bin/savetofile" "create-nl" "/etc/consul/ssl/ca.crt" "100" "1000" "644" }}
     {{ else }}
-      {{ $value | plugin "/usr/local/bin/savetofile" "append-nl" "/etc/consul/ssl/ca.crt" "100" "1000" }}
+      {{ $value | plugin "/usr/local/bin/savetofile" "append-nl" "/etc/consul/ssl/ca.crt" "100" "1000" "644" }}
     {{ end }}
   {{ end }}
   {{ end }}
   
   {{ if .Data.certificate }}
-  {{ .Data.certificate | plugin "/usr/local/bin/savetofile" "create-nl" "/etc/consul/ssl/consul.crt" "100" "1000" }}
+  {{ .Data.certificate | plugin "/usr/local/bin/savetofile" "create-nl" "/etc/consul/ssl/consul.crt" "100" "1000" "644" }}
   {{ end }}
 
   {{ if .Data.private_key }}
-  {{ .Data.private_key | plugin "/usr/local/bin/savetofile" "create-nl" "/etc/consul/ssl/consul.key" "100" "1000" }}
+  {{ .Data.private_key | plugin "/usr/local/bin/savetofile" "create-nl" "/etc/consul/ssl/consul.key" "100" "1000" "600" }}
   {{ end }}
 {{ end }}
 

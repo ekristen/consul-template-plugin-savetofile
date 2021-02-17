@@ -19,16 +19,17 @@ func main() {
 }
 
 func realMain() error {
-	if len(os.Args) != 6 {
+	if len(os.Args) != 7 {
 		return nil
 	}
 
-	// savetofile <mode> <filepath> <uid> <gid> <data>
+	// savetofile <mode> <filepath> <uid> <gid> <perm> <data>
 	mode := os.Args[1]
 	path := os.Args[2]
 	uid_arg := os.Args[3]
 	gid_arg := os.Args[4]
-	data := os.Args[5]
+	perm_arg := os.Args[5]
+	data := os.Args[6]
 
 	uid, err := strconv.Atoi(uid_arg)
 	if err != nil {
@@ -40,9 +41,16 @@ func realMain() error {
 		return err
 	}
 
+	perm_u, err := strconv.ParseUint(perm_arg, 8, 32)
+	if err != nil {
+		return err
+	}
+
+	perm := os.FileMode(perm_u)
+
 	switch mode {
 	case "append":
-		f, err := os.OpenFile(path, os.O_APPEND|os.O_WRONLY, 0700)
+		f, err := os.OpenFile(path, os.O_APPEND|os.O_WRONLY, perm)
 		if err != nil {
 			return err
 		}
@@ -53,7 +61,7 @@ func realMain() error {
 			return err
 		}
 	case "append-nl":
-		f, err := os.OpenFile(path, os.O_APPEND|os.O_WRONLY, 0700)
+		f, err := os.OpenFile(path, os.O_APPEND|os.O_WRONLY, perm)
 		if err != nil {
 			return err
 		}
@@ -68,12 +76,12 @@ func realMain() error {
 			return err
 		}
 	case "create-nl":
-		err := ioutil.WriteFile(path, append([]byte(data), []byte("\n")...), 0700)
+		err := ioutil.WriteFile(path, append([]byte(data), []byte("\n")...), perm)
 		if err != nil {
 			return err
 		}
 	default: // "create"
-		err := ioutil.WriteFile(path, []byte(data), 0700)
+		err := ioutil.WriteFile(path, []byte(data), perm)
 		if err != nil {
 			return err
 		}
@@ -84,7 +92,7 @@ func realMain() error {
 		return err
 	}
 
-	err = os.Chmod(path, 0640)
+	err = os.Chmod(path, perm)
 	if err != nil {
 		return err
 	}
