@@ -5,6 +5,9 @@ import (
 	"log"
 	"os"
 	"strconv"
+	"fmt"
+	"crypto/sha256"
+	"path/filepath"
 )
 
 func main() {
@@ -30,6 +33,8 @@ func realMain() error {
 	gid_arg := os.Args[4]
 	perm_arg := os.Args[5]
 	data := os.Args[6]
+
+  os.MkdirAll(filepath.Dir(path), os.ModePerm)
 
 	uid, err := strconv.Atoi(uid_arg)
 	if err != nil {
@@ -96,6 +101,8 @@ func realMain() error {
 	if err != nil {
 		return err
 	}
+
+	fmt.Printf("%x", sha256.Sum256([]byte(data)))
 
 	return nil
 }
